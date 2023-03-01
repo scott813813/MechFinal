@@ -1,7 +1,7 @@
 # ME405 Term Project
 
 ### Dueling Robot
-@section Software Design
+Software Design
 The dueling robot uses a set of tasks to run and target an opponent 
 succesfully. The robot uses MicroPython to control two motors and adjust the
 pitch and yaw axis in order to follow the target found in the provided
@@ -36,7 +36,7 @@ try to aim at the target. If Pitch Task is at the same position of the target
 for several cycles, then the target is located in the vertical axis and the
 Pitch Task shares P_OnTarg to high to the Firing Task.
 
-#Firing Task
+### Firing Task
 The firing task takes the data shared by both the Yaw Task and the Pitch Task
 in the form of the two booleans: Y_OnTarg and P_On_Targ respectively. If 
 both booleans are True then the firing task commands the firing motor to 
