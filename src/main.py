@@ -216,7 +216,7 @@ if __name__ == "__main__":
     
     yawStartPos = 13272 # 180 degrees, ie 3.32 rotations with a gear ratio of 15
     
-    pitchStartPos = 2000 # Keep steady heading
+    pitchStartPos = 8000 # Keep steady heading
     #global buttonGo
     #buttonGo = False
     global buttonCounts
