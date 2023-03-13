@@ -11,7 +11,8 @@ import gc # Memory allocation garbage collector
 import pyb # Micropython library
 import utime # Micropython version of time library
 import cotask # Run cooperatively scheduled tasks in a multitasking system
-import task_share # Tasks share data 
+import task_share # Tasks share data
+from machine import Pin
 
 from closed_loop_control import clCont # The closed loop control method from closed_loop_control.py
 from motor_driver import MotorDriver # The method to drive the motor from motor_drive.py
@@ -59,6 +60,8 @@ def main():
     pitchStartPos = 0 # Keep steady heading
     global buttonGo
     buttonGo = False
+    global buttonCounts
+    buttonCounts = 0
 
     # Run the scheduler with the chosen scheduling algorithm. Quit if ^C pressed
     print('We here 1')
@@ -77,7 +80,7 @@ def main():
     # allocated for state transition tracing, and the application will run out
     # of memory after a while and quit. Therefore, use tracing only for 
     # debugging and set trace to False when it's not needed
-    task1 = cotask.Task(masterTask, name="Master Task", priority=1, period=100,
+    task1 = cotask.Task(masterTask, name="Master Task", priority=1, period=10,
                         profile=True, trace=True, shares=(s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting))
     task2 = cotask.Task(yawTask, name="Yaw Task", priority=2, period=40,
                         profile=True, trace=False, shares=(s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting))
@@ -88,7 +91,6 @@ def main():
     task5 = cotask.Task(fireTask, name="Fire Task", priority=4, period=100,
                         profile=True, trace=False, shares=(s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting))
                         '''
-    buttonInt = pyb.ExtInt(pyb.Pin.board.PC13, pyb.ExtInt.IRQ_FALLING, pyb.Pin.PULL_UP, buttonLogic)
     
     cotask.task_list.append(task1)
     cotask.task_list.append(task2)
@@ -103,68 +105,80 @@ def main():
     gc.collect()
     print('here 2')
     
-def buttonLogic():
-    global buttonCounts
+    
+def buttonLogic(pin):
+    
     buttonCounts += 1
     print('button press')
     
     if buttonCounts == 1:
         buttonGo = True
+
     else:
         buttonGo = False
+        
     
     #if buttonSet == True:   
     #buttonState = False
 
+
+
 def masterTask(shares):
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
-    print('master')
-    while buttonGo == True:
-        if masterState == 0: # Initilization state
-            masterState = 1
-            print('Master: S1')
-            yield
-            
-        elif masterState == 1: # Go to aiming position  
-            s_YawPos.put(yawStartPos)
-            #s_PitchPos.put(pitchStartPos)
-            #masterState = 2
-            print('Master: S2')
-            yield
-        """
-        elif masterState == 2: # Wait four seconds until time to track, and then five to fire
-            timeElapse = utime.ticks_ms() - zeroPoint # Time since button pressed
-            
-            if timeElapse >= idlePeriod: # Stop firing
-                s_StopShooting.put(True)
+    while True:
+        print('master')
+        while buttonGo == True:
+            if masterState == 0: # Initilization state
+                masterState = 1
+                print('Master: S1')
+                yield
                 
-            elif timeElapse >= firePeriod: # Begin firing
-                s_TimeToFire.put(True)
+            elif masterState == 1: # Go to aiming position  
+                s_YawPos.put(yawStartPos)
+                #s_PitchPos.put(pitchStartPos)
+                #masterState = 2
+                print('Master: S2')
+                yield
+            """
+            elif masterState == 2: # Wait four seconds until time to track, and then five to fire
+                timeElapse = utime.ticks_ms() - zeroPoint # Time since button pressed
                 
-            elif timeElapse >= trackPeriod: # Begin tracking
-                s_TimeToTrack.put(True)
-          """
+                if timeElapse >= idlePeriod: # Stop firing
+                    s_StopShooting.put(True)
+                    
+                elif timeElapse >= firePeriod: # Begin firing
+                    s_TimeToFire.put(True)
+                    
+                elif timeElapse >= trackPeriod: # Begin tracking
+                    s_TimeToTrack.put(True)
+              """
+            print('yield 2')
+            yield
+        print('yield 1')
         yield
 
                 
             
 def yawTask(shares):
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
-    
-    if buttonGo == True:
-        '''Control Loop Setup'''
-        Kp = 0.06				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
-        cll = clCont(0, Kp) # Set proportional constant gain for yaw motor
-        print('Set Motor constant')
-        while True:
-            p = encY.read() # Current position of yaw motor 
-            lvl = cll.run(s_YawPos.get(), p) # Run closed loop controller
-            moey.set_duty_cycle(lvl) # Set the duty cycle
-            print('Motor')
-            # send new value high, 
-            # scrub current reading, and set it to 0
-            # go to new reading, and set new value reading low
-            yield 
+    while True:
+        print('yaw')
+        if buttonGo == True:
+            '''Control Loop Setup'''
+            Kp = 0.06				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
+            cll = clCont(0, Kp) # Set proportional constant gain for yaw motor
+            print('Set Motor constant')
+            while True:
+                p = encY.read() # Current position of yaw motor 
+                lvl = cll.run(s_YawPos.get(), p) # Run closed loop controller
+                moey.set_duty_cycle(lvl) # Set the duty cycle
+                print('Motor')
+                # send new value high, 
+                # scrub current reading, and set it to 0
+                # go to new reading, and set new value reading low
+                yield
+            yield
+        yield
                 
 '''    
 def pitchTask(shares): 
@@ -245,7 +259,10 @@ def fireTask(shares):
         pinFlywheel.low() # turn the flywheel off
         # turn off firing mechanism
  '''           
-            
+
+buttonInt = pyb.ExtInt(pyb.Pin.board.PC13, pyb.ExtInt.IRQ_FALLING, pyb.Pin.PULL_UP, buttonLogic)
+
+
 if __name__ == "__main__":
     
     main()
