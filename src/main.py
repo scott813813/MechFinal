@@ -17,7 +17,7 @@ from machine import Pin
 from closed_loop_control import clCont # The closed loop control method from closed_loop_control.py
 from motor_driver import MotorDriver # The method to drive the motor from motor_drive.py
 from encoder_reader import EncoderReader # Read encoder method from encoder_reader.py
-
+from mlx_cam import MLX_Cam # Take values from IR camera
     
 def buttonLogic(pin):
     print('button press')
@@ -95,7 +95,7 @@ def pitchTask(shares):
         print('pitch')
         if buttonCounts == 1:
             '''Control Loop Setup'''
-            Kp = 0.06				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
+            Kp = 0.07				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
             cll = clCont(0, Kp) # Set proportional constant gain for yaw motor
             print('Set Yaw Motor constant')
             while buttonCounts == 1:
