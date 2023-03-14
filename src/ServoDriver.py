@@ -15,7 +15,7 @@ class ServoDriver:
         '''en_pin.low()
         self.en_pin = en_pin'''
         # Setup Timer
-        tim = pyb.Timer(timer, prescaler = 80, period = 20000) 
+        tim = pyb.Timer(timer, prescaler = 79, period = 19999) 
         self.tim = tim
         # Setup Channel
         ch1 = tim.channel(1, pyb.Timer.PWM, pin=in1pin)
@@ -48,4 +48,15 @@ class ServoDriver:
             level = level/(-1)
             self.ch1.pulse_width(level)
             self.ch1.pulse_width(0)
-        print (f"Setting duty cycle to {level}")''''''
+        print (f"Setting duty cycle to {level}")'''
+
+if __name__ == "__main__":
+
+    pinA8 = pyb.Pin(pyb.Pin.board.PA8, pyb.Pin.OUT_PP)
+    tim = 1
+    
+    trig = ServoDriver(pinA8, tim)
+    try:
+        trig.runServo(800) # 800=rest, 1500 = fire!
+    except KeyboardInterrupt:
+        print("Interupted")

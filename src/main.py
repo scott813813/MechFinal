@@ -12,12 +12,12 @@ import pyb # Micropython library
 import utime # Micropython version of time library
 import cotask # Run cooperatively scheduled tasks in a multitasking system
 import task_share # Tasks share data
-from machine import Pin
 
 from closed_loop_control import clCont # The closed loop control method from closed_loop_control.py
 from motor_driver import MotorDriver # The method to drive the motor from motor_drive.py
 from encoder_reader import EncoderReader # Read encoder method from encoder_reader.py
 from mlx_cam import MLX_Cam # Take values from IR camera
+from ServoDriver  
     
 def buttonLogic(pin):
     print('button press')
@@ -38,12 +38,26 @@ def masterTask(shares):
         while buttonCounts == 1:
             if masterState == 0: # Initilization state
                 masterState = 1
+                # Setup servo
+                trig.runServo(800) # 800=rest, 1500 = fire!
                 print('Master: S1')
                 yield
                 
             elif masterState == 1: # Go to aiming position  
                 s_YawPos.put(yawStartPos)
                 s_PitchPos.put(pitchStartPos)
+                pinFlywheel.high() # Spin up flywheels - delete after test
+                
+                # Hope this fires servo
+                trig.runServo(1500) # 800=rest, 1500 = fire!
+                
+                # Setup Timer
+                tim = pyb.Timer(timer, prescaler = 80, period = 20000) 
+                self.tim = tim
+                # Setup Channel
+                ch1 = tim.channel(1, pyb.Timer.PWM, pin=in1pin)
+                self.ch1 = ch1
+                
                 #masterState = 2
                 print('Master: S2')
                 yield
@@ -203,6 +217,11 @@ if __name__ == "__main__":
     encP = EncoderReader(pinC6, pinC7, 8)
     encP.zero()
     
+    ''' Servo Setup'''
+    pinA8 = pyb.Pin(pyb.Pin.board.PA8, pyb.Pin.OUT_PP)
+    tim = 1
+    trig = ServoDriver(pinA8, tim)
+    
     # Initialized values
     masterState = 0 # Initialized state of FSM
     fireState = 0 # Initialized state of FSM
@@ -214,9 +233,12 @@ if __name__ == "__main__":
     
     pinFlywheel = pyb.Pin(pyb.Pin.board.PC0, pyb.Pin.OUT_PP) # Flywheel port
     
+    pinA8 = pyb.Pin(pyb.Pin.board.PA8, pyb.Pin.OUT_PP) # Servo port
+    
+    
     yawStartPos = 13272 # 180 degrees, ie 3.32 rotations with a gear ratio of 15
     
-    pitchStartPos = 8000 # Keep steady heading
+    pitchStartPos = -4000 # Keep steady heading
     #global buttonGo
     #buttonGo = False
     global buttonCounts
