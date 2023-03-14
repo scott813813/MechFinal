@@ -192,28 +192,32 @@ class MLX_Cam:
         col = 0 #Tracks col (0-3) for x position
         yaw = 0 #X val of target position
         pitch = 0 #Y val of target position
-        preAvg = [0] #Array holding previous 8 hottest values for averaging
-        curAvg = [] #Array holding current 8 values for averaging
+        preAvg = 0 #Array holding previous 8 hottest values for averaging
+        curAvg = 0 #Array holding current 8 values for averaging
+        print(type(array))
         for r in range(len(array)):
-            curAvg.append(array[r])
-            if r%32 == 0:   #If count reaches 32, then a new row has occured
+            curAvg += (array[r]/-1)
+            if (r+1)%32 == 0:   #If count reaches 32, then a new row has occured
                 row += 1
 
-            if r%8 == 0:    #If count reaches 8, then a new section/column has begun
-                pAvg = np.mean(preAvg)  #Computes average heat val of previus hottest 8 vals
-                cAvg = np.mean(curAvg)  #Computes average heat val of current 8 vals
-                if cAvg >= pAvg:    #If currentavg > prevavg set the x and y position vals equal to current and prev hot array to current and clear current
+            if (r+1)%8 == 0:    #If count reaches 8, then a new section/column has begun
+                preAvg = preAvg  #Computes average heat val of previus hottest 8 vals
+                print(preAvg)
+                curAvg = curAvg/8  #Computes average heat val of current 8 vals
+                print(curAvg)
+                if curAvg <= preAvg:    #If currentavg > prevavg set the x and y position vals equal to current and prev hot array to current and clear current
                     yaw = (col+1)*8 - 4
-                    pitch = row 
+                    pitch = row
                     preAvg = curAvg
-                    curAvg = []
+                    curAvg = 0
                 else:   #If prevavg greater than current, retain and clear current
-                    curAvg = []
+                    curAvg = 0
 
-                if col%4 == 0:  #If 4 columns occur, restart count back to 1 (loops through)
+                if (col+1)%4 == 0:  #If 4 columns occur, restart count back to 1 (loops through)
                     col = 0
-                else:   #Increase column count
-                    col += col
+                col+=1
+                '''else:   #Increase column count
+                    col += 1'''
         '''centX = self._width - int(yaw)
         centY = self._height - int(pitch)'''
         return [int(yaw) - (self._width/2), int(pitch) - (self._height/2)]
@@ -235,6 +239,24 @@ class MLX_Cam:
         centX = self._width - int(cent % self._width)   #Finds the x distance by subtracting the remainder of the center index by the width from the width
         centY = self._height - int(cent % self._height) #Finds the y distance by subtracting the remainder of the center index by the height from the height
         return [centX, centY]'''
+        
+    def find_hotSpot(self, array):
+        av = []
+        cAvg = 0
+        for row in range(self._height):
+            for col in range(self._width):
+                pix = (array[row * self._width + (self._width - col - 1)])
+                cAvg += pix/4
+                if (col + 1)%4 == 0:
+                    av.append(cAvg)
+                    cAvg = 0
+        maxAv = av[0]
+        for index in range(len(av)):
+            if av[index] > maxAv:
+                maxAv = av[index]
+                x = ((index + 1)%8)*4 - 2
+                y = int((index) / 8)
+        return [x, y]
     
     def find_errX(self,Xcurr, Xwant):
         return (Xwant-Xcurr)/100 #Returns the percentage difference between the values 
@@ -292,12 +314,8 @@ if __name__ == "__main__":
                     print(line)
             else:
                 camera.ascii_art(image)
-            [Xcenter,Ycenter] = find_cent(image)
-            print(Xcenter)
-            print(Ycenter)
-            errX = find_errX(0,Xcenter)
-            print(errX)
-            time.sleep_ms(10000)
+            print(camera.find_hotSpot(image))
+            time.sleep_ms(2000)
             
         except KeyboardInterrupt:
             break
