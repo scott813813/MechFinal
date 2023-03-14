@@ -29,7 +29,7 @@ from machine import Pin, I2C
 from mlx90640 import MLX90640
 from mlx90640.calibration import NUM_ROWS, NUM_COLS, IMAGE_SIZE, TEMP_K
 from mlx90640.image import ChessPattern, InterleavedPattern
-import numpy as np
+from ulab import numpy as np
 
 
 class MLX_Cam:
@@ -188,6 +188,38 @@ class MLX_Cam:
         return image
 
     def find_cent(self,array):
+        row = 0 #Tracs row (0-23) for y position
+        col = 0 #Tracks col (0-3) for x position
+        yaw = 0 #X val of target position
+        pitch = 0 #Y val of target position
+        preAvg = [0] #Array holding previous 8 hottest values for averaging
+        curAvg = [] #Array holding current 8 values for averaging
+        for r in range(len(array)):
+            curAvg.append(array[r])
+            if r%32 == 0:   #If count reaches 32, then a new row has occured
+                row += 1
+
+            if r%8 == 0:    #If count reaches 8, then a new section/column has begun
+                pAvg = np.mean(preAvg)  #Computes average heat val of previus hottest 8 vals
+                cAvg = np.mean(curAvg)  #Computes average heat val of current 8 vals
+                if cAvg >= pAvg:    #If currentavg > prevavg set the x and y position vals equal to current and prev hot array to current and clear current
+                    yaw = (col+1)*8 - 4
+                    pitch = row 
+                    preAvg = curAvg
+                    curAvg = []
+                else:   #If prevavg greater than current, retain and clear current
+                    curAvg = []
+
+                if col%4 == 0:  #If 4 columns occur, restart count back to 1 (loops through)
+                    col = 0
+                else:   #Increase column count
+                    col += col
+        '''centX = self._width - int(yaw)
+        centY = self._height - int(pitch)'''
+        return [int(yaw) - (self._width/2), int(pitch) - (self._height/2)]
+        #return [centX, centY]
+
+        '''
         avgAr = [] #creates an list to hold averages of each section of split image (below)
         splitArrays = np.array_split(array,96) #splits image into 96 arrays (4 arrays per row of 8 values...)
         for n in range(splitArrays):   #determines the average value of each array and puts into average array
@@ -202,7 +234,7 @@ class MLX_Cam:
                     cent = guy-3
         centX = self._width - int(cent % self._width)   #Finds the x distance by subtracting the remainder of the center index by the width from the width
         centY = self._height - int(cent % self._height) #Finds the y distance by subtracting the remainder of the center index by the height from the height
-        return [centX, centY]
+        return [centX, centY]'''
     
     def find_errX(self,Xcurr, Xwant):
         return (Xwant-Xcurr)/100 #Returns the percentage difference between the values 
@@ -251,7 +283,7 @@ if __name__ == "__main__":
             # Display pixellated grayscale or numbers in CSV format; the CSV
             # could also be written to a file. Spreadsheets, Matlab(tm), or
             # CPython can read CSV and make a decent false-color heat plot.
-            show_image = True
+            show_image = False
             show_csv = False
             if show_image:
                 camera.ascii_image(image)
@@ -260,8 +292,13 @@ if __name__ == "__main__":
                     print(line)
             else:
                 camera.ascii_art(image)
+            [Xcenter,Ycenter] = find_cent(image)
+            print(Xcenter)
+            print(Ycenter)
+            errX = find_errX(0,Xcenter)
+            print(errX)
             time.sleep_ms(10000)
-
+            
         except KeyboardInterrupt:
             break
 
