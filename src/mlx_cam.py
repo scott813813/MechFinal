@@ -29,7 +29,6 @@ from machine import Pin, I2C
 from mlx90640 import MLX90640
 from mlx90640.calibration import NUM_ROWS, NUM_COLS, IMAGE_SIZE, TEMP_K
 from mlx90640.image import ChessPattern, InterleavedPattern
-from ulab import numpy as np
 
 
 class MLX_Cam:
@@ -68,50 +67,7 @@ class MLX_Cam:
 
         ## A local reference to the image object within the camera driver
         self._image = self._camera.raw
-
-
-    def ascii_image(self, array, pixel="██", textcolor="0;180;0"):
-        """!
-        @brief   Show low-resolution camera data as shaded pixels on a text
-                 screen.
-        @details The data is printed as a set of characters in columns for the
-                 number of rows in the camera's image size. This function is
-                 intended for testing an MLX90640 thermal infrared sensor.
-
-                 A pair of extended ACSII filled rectangles is used by default
-                 to show each pixel so that the aspect ratio of the display on
-                 screens isn't too smushed. Each pixel is colored using ANSI
-                 terminal escape codes which work in only some programs such as
-                 PuTTY.  If shown in simpler terminal programs such as the one
-                 used in Thonny, the display just shows a bunch of pixel
-                 symbols with no difference in shading (boring).
-
-                 A simple auto-brightness scaling is done, setting the lowest
-                 brightness of a filled block to 0 and the highest to 255. If
-                 there are bad pixels, this can reduce contrast in the rest of
-                 the image.
-
-                 After the printing is done, character color is reset to a
-                 default of medium-brightness green, or something else if
-                 chosen.
-        @param   array An array of (self._width * self._height) pixel values
-        @param   pixel Text which is shown for each pixel, default being a pair
-                 of extended-ASCII blocks (code 219)
-        @param   textcolor The color to which printed text is reset when the
-                 image has been finished, as a string "<r>;<g>;<b>" with each
-                 letter representing the intensity of red, green, and blue from
-                 0 to 255
-        """
-        minny = min(array)
-        scale = 255.0 / (max(array) - minny)
-        for row in range(self._height):
-            for col in range(self._width):
-                pix = int((array[row * self._width + (self._width - col - 1)]
-                           - minny) * scale)
-                print(f"\033[38;2;{pix};{pix};{pix}m{pixel}", end='')
-            print(f"\033[38;2;{textcolor}m")
-
-
+        
     ## A "standard" set of characters of different densities to make ASCII art
     asc = " -.:=+*#%@"
 
@@ -140,34 +96,6 @@ class MLX_Cam:
         return
 
 
-    def get_csv(self, array, limits=None):
-        """!
-        @brief   Generate a string containing image data in CSV format.
-        @details This function generates a set of lines, each having one row of
-                 image data in Comma Separated Variable format. The lines can
-                 be printed or saved to a file using a @c for loop.
-        @param   array The array of data to be presented
-        @param   limits A 2-iterable containing the maximum and minimum values
-                 to which the data should be scaled, or @c None for no scaling
-        """
-        if limits and len(limits) == 2:
-            scale = (limits[1] - limits[0]) / (max(array) - min(array))
-            offset = limits[0] - min(array)
-        else:
-            offset = 0.0
-            scale = 1.0
-        for row in range(self._height):
-            line = ""
-            for col in range(self._width):
-                pix = int((array[row * self._width + (self._width - col - 1)]
-                          + offset) * scale)
-                if col:
-                    line += ","
-                line += f"{pix}"
-            yield line
-        return
-
-
     def get_image(self):
         """!
         @brief   Get one image from a MLX90640 camera.
@@ -187,59 +115,6 @@ class MLX_Cam:
 
         return image
 
-    def find_cent(self,array):
-        row = 0 #Tracs row (0-23) for y position
-        col = 0 #Tracks col (0-3) for x position
-        yaw = 0 #X val of target position
-        pitch = 0 #Y val of target position
-        preAvg = 0 #Array holding previous 8 hottest values for averaging
-        curAvg = 0 #Array holding current 8 values for averaging
-        print(type(array))
-        for r in range(len(array)):
-            curAvg += (array[r]/-1)
-            if (r+1)%32 == 0:   #If count reaches 32, then a new row has occured
-                row += 1
-
-            if (r+1)%8 == 0:    #If count reaches 8, then a new section/column has begun
-                preAvg = preAvg  #Computes average heat val of previus hottest 8 vals
-                print(preAvg)
-                curAvg = curAvg/8  #Computes average heat val of current 8 vals
-                print(curAvg)
-                if curAvg <= preAvg:    #If currentavg > prevavg set the x and y position vals equal to current and prev hot array to current and clear current
-                    yaw = (col+1)*8 - 4
-                    pitch = row
-                    preAvg = curAvg
-                    curAvg = 0
-                else:   #If prevavg greater than current, retain and clear current
-                    curAvg = 0
-
-                if (col+1)%4 == 0:  #If 4 columns occur, restart count back to 1 (loops through)
-                    col = 0
-                col+=1
-                '''else:   #Increase column count
-                    col += 1'''
-        '''centX = self._width - int(yaw)
-        centY = self._height - int(pitch)'''
-        return [int(yaw) - (self._width/2), int(pitch) - (self._height/2)]
-        #return [centX, centY]
-
-        '''
-        avgAr = [] #creates an list to hold averages of each section of split image (below)
-        splitArrays = np.array_split(array,96) #splits image into 96 arrays (4 arrays per row of 8 values...)
-        for n in range(splitArrays):   #determines the average value of each array and puts into average array
-            avgAr.append(np.mean(n))
-        maxArrayInd = enumerate(avgAr)  #Finds the index of the max average value
-        maxAr = splitArrays[maxArrayInd]    #Is set equal to the max average array 
-        compArr = [0, 0, 0, 0, 0, 0, 0, 0] #Comparable variable used to compare each 4 value sof camera to the maxAr 
-        for guy in range(len(array)): #Iterates through every value in array
-            compArr[guy%8] = array[guy] #Sets each value in the comparable list to the current value in array; uses remainder of 8 to iterate positions
-            if guy%8 == 0 and guy > 0: #Ever 8 values, compares the compArr to the array found to have the maximum average
-                if compArr == maxAr: #If they're the same, set the center point for the gun to target equal to the current index - 3 (about center of array)
-                    cent = guy-3
-        centX = self._width - int(cent % self._width)   #Finds the x distance by subtracting the remainder of the center index by the width from the width
-        centY = self._height - int(cent % self._height) #Finds the y distance by subtracting the remainder of the center index by the height from the height
-        return [centX, centY]'''
-        
     def find_hotSpot(self, array):
         av = []
         cAvg = 0
@@ -258,12 +133,6 @@ class MLX_Cam:
                 y = int((index) / 8)
         return [x, y]
     
-    def find_errX(self,Xcurr, Xwant):
-        return (Xwant-Xcurr)/100 #Returns the percentage difference between the values 
-    
-    def find_errY(self,Ycurr, Ywant):
-        return (Ywant-Ycurr)/100 #Returns the percentage difference between the values
-
 # The test code sets up the sensor, then grabs and shows an image in a terminal
 # every ten and a half seconds or so.
 ## @cond NO_DOXY don't document the test code in the driver documentation
@@ -314,14 +183,11 @@ if __name__ == "__main__":
                     print(line)
             else:
                 camera.ascii_art(image)
-            print(camera.find_hotSpot(image))
-            time.sleep_ms(2000)
-            
+            time.sleep_ms(10000)
+
         except KeyboardInterrupt:
             break
 
     print ("Done.")
 
 ## @endcond End the block which Doxygen should ignore
-
-
