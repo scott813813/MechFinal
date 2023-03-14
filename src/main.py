@@ -16,8 +16,8 @@ import task_share # Tasks share data
 from closed_loop_control import clCont # The closed loop control method from closed_loop_control.py
 from motor_driver import MotorDriver # The method to drive the motor from motor_drive.py
 from encoder_reader import EncoderReader # Read encoder method from encoder_reader.py
-from mlx_cam import MLX_Cam # Take values from IR camera
-from ServoDriver  
+#from mlx_cam import MLX_Cam # Take values from IR camera
+import ServoDriver  
     
 def buttonLogic(pin):
     print('button press')
@@ -33,36 +33,35 @@ def masterTask(shares):
     #yawStartPos = 13272 # 180 degrees, ie 3.32 rotations with a gear ratio of 15
     #pitchStartPos = 0 # Keep steady heading
     while True:
-        print('button', buttonCounts)
-        print('master')
+        
+        
         while buttonCounts == 1:
             if masterState == 0: # Initilization state
                 masterState = 1
                 # Setup servo
                 trig.runServo(800) # 800=rest, 1500 = fire!
-                print('Master: S1')
+                pinFlywheel.high() # Spin up flywheels - delete after test
+                utime.sleep_ms(1000)
+                
+                # Hope this fires servo
+                trig.runServo(1700) # 800=rest, 1500 = fire!
+                utime.sleep_ms(1000)
+                trig.runServo(800) # 800=rest, 1500 = fire!
+                pinFlywheel.low() # Spin up flywheels - delete after test
                 yield
                 
             elif masterState == 1: # Go to aiming position  
                 s_YawPos.put(yawStartPos)
                 s_PitchPos.put(pitchStartPos)
-                pinFlywheel.high() # Spin up flywheels - delete after test
                 
-                # Hope this fires servo
-                trig.runServo(1500) # 800=rest, 1500 = fire!
                 
-                # Setup Timer
-                tim = pyb.Timer(timer, prescaler = 80, period = 20000) 
-                self.tim = tim
-                # Setup Channel
-                ch1 = tim.channel(1, pyb.Timer.PWM, pin=in1pin)
-                self.ch1 = ch1
+                masterState = 2
                 
-                #masterState = 2
-                print('Master: S2')
                 yield
-            """
+            
             elif masterState == 2: # Wait four seconds until time to track, and then five to fire
+                pass
+                '''
                 timeElapse = utime.ticks_ms() - zeroPoint # Time since button pressed
                 
                 if timeElapse >= idlePeriod: # Stop firing
@@ -73,56 +72,59 @@ def masterTask(shares):
                     
                 elif timeElapse >= trackPeriod: # Begin tracking
                     s_TimeToTrack.put(True)
-              """
-            print('yield 2')
+              '''
             yield
-        print('yield 1')
         yield
 
                 
             
 def yawTask(shares):
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
+    
+    '''Control Loop Setup'''
+    Kp = 0.05				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
+    cll = clCont(0, Kp, 30) # Set proportional constant gain for yaw motor
     while True:
-        print('yaw')
-        if buttonCounts == 1:
-            '''Control Loop Setup'''
-            Kp = 0.06				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
-            cll = clCont(0, Kp) # Set proportional constant gain for yaw motor
-            print('Set Yaw Motor constant')
-            while buttonCounts == 1:
-                p = encY.read() # Current position of yaw motor
-                lvl = cll.run(s_YawPos.get(), p) # Run closed loop controller
-                moeY.set_duty_cycle(lvl) # Set the duty cycle
-                print('Yaw Motor')
-                # send new value high, 
-                # scrub current reading, and set it to 0
-                # go to new reading, and set new value reading low
-                yield
+        while buttonCounts == 1:
+            p = encY.read() # Current position of yaw motor
+            if p > 60000 or p < -60000:
+                encY.zero()
+                p = encY.read()
+            lvl = cll.run(s_YawPos.get(), p) # Run closed loop controller
+            moeY.set_duty_cycle(lvl) # Set the duty cycle
+            # send new value high, 
+            # scrub current reading, and set it to 0
+            # go to new reading, and set new value reading low
             yield
         yield
+    yield
                 
 
 def pitchTask(shares): 
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
+    '''Control Loop Setup'''
+    Kp = 0.05				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
+    cll = clCont(0, Kp, 50) # Set proportional constant gain for yaw motor
     while True:
-        print('pitch')
-        if buttonCounts == 1:
-            '''Control Loop Setup'''
-            Kp = 0.07				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
-            cll = clCont(0, Kp) # Set proportional constant gain for yaw motor
-            print('Set Yaw Motor constant')
-            while buttonCounts == 1:
-                p = encP.read() # Current position of pitch motor 
-                lvl = cll.run(s_PitchPos.get(), p) # Run closed loop controller
-                moeP.set_duty_cycle(lvl) # Set the duty cycle
-                print('Pitch Motor')
-                # send new value high, 
-                # scrub current reading, and set it to 0
-                # go to new reading, and set new value reading low
-                yield
+        while buttonCounts == 1:
+            p = encP.read() # Current position of pitch motor
+            if p > 60000 or p < -60000:
+                encY.zero()
+                p = encY.read()
+            print("pitch position")
+            print(p)
+            lvl = cll.run(s_PitchPos.get(), p) # Run closed loop controller
+            print("level")
+            print(lvl)
+            print("pitch desired")
+            print(s_PitchPos.get())
+            moeP.set_duty_cycle(lvl) # Set the duty cycle
+            # send new value high, 
+            # scrub current reading, and set it to 0
+            # go to new reading, and set new value reading low
             yield
         yield
+    yield
 '''
 def pictureTask(shares):
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
@@ -203,6 +205,7 @@ if __name__ == "__main__":
     pinB7 = pyb.Pin(pyb.Pin.board.PB7, pyb.Pin.IN)
     encY = EncoderReader(pinB6, pinB7, 4)
     encY.zero()
+    print(encY.read())
     
     ''' Pitch Setup Below'''
     pinA10 = pyb.Pin(pyb.Pin.board.PA10, pyb.Pin.OUT_PP)
@@ -218,9 +221,9 @@ if __name__ == "__main__":
     encP.zero()
     
     ''' Servo Setup'''
-    pinA8 = pyb.Pin(pyb.Pin.board.PA8, pyb.Pin.OUT_PP)
-    tim = 1
-    trig = ServoDriver(pinA8, tim)
+    pinB3 = pyb.Pin(pyb.Pin.board.PB3, pyb.Pin.OUT_PP)
+    tim = 2
+    trig = ServoDriver.ServoDriver(pinB3, tim)
     
     # Initialized values
     masterState = 0 # Initialized state of FSM
@@ -236,9 +239,9 @@ if __name__ == "__main__":
     pinA8 = pyb.Pin(pyb.Pin.board.PA8, pyb.Pin.OUT_PP) # Servo port
     
     
-    yawStartPos = 13272 # 180 degrees, ie 3.32 rotations with a gear ratio of 15
+    yawStartPos = -18500 # 180 degrees, ie 3.32 rotations with a gear ratio of 15, 18500 for 180 degrees clockwise
     
-    pitchStartPos = -4000 # Keep steady heading
+    pitchStartPos = 0 # Keep steady heading, -15000 for tilt from downward to median
     #global buttonGo
     #buttonGo = False
     global buttonCounts
@@ -261,7 +264,7 @@ if __name__ == "__main__":
     # allocated for state transition tracing, and the application will run out
     # of memory after a while and quit. Therefore, use tracing only for 
     # debugging and set trace to False when it's not needed
-    task1 = cotask.Task(masterTask, name="Master Task", priority=1, period=10,
+    task1 = cotask.Task(masterTask, name="Master Task", priority=1, period=0,
                         profile=True, trace=True, shares=(s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting))
     task2 = cotask.Task(yawTask, name="Yaw Task", priority=2, period=40,
                         profile=True, trace=False, shares=(s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting))
@@ -292,3 +295,4 @@ if __name__ == "__main__":
             cotask.task_list.pri_sched()
         except KeyboardInterrupt:
             break
+

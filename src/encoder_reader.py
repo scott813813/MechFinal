@@ -29,10 +29,13 @@ class EncoderReader:
         @returns The position of the motor from the zero point
         """
         current_position = self.timer.counter()
-        if current_position - self.former_position > 2000:
-            difference = current_position - 4000 + self.former_position
-        elif current_position - self.former_position < -2000:
-            difference = current_position + 4000 - self.former_position
+        if current_position - self.former_position > 30000:
+            difference = current_position - 65535 + self.former_position
+            print(current_position)
+            print(self.former_position)
+            print("cur, for")
+        elif current_position - self.former_position < -30000:
+            difference = current_position + 65535 - self.former_position
         else:
             difference = current_position - self.former_position
         self.former_position = current_position
@@ -55,4 +58,4 @@ if __name__ == "__main__":
     test.zero()
     while True:
         print(test.read())
-        pyb.delay(100)3
+        pyb.delay(100)

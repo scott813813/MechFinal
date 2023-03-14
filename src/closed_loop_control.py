@@ -15,7 +15,7 @@ class clCont:
     Implements a closed loop control scheme
     """
     
-    def __init__(self, initSet, initKp):
+    def __init__(self, initSet, initKp, powerLimit):
         """!
         Stores variables set in main.py
         @param initSet The target position of the motor
@@ -23,6 +23,7 @@ class clCont:
         """
         self.setpoint = initSet
         self.Kp = initKp
+        self.limit = powerLimit
         
     def run(self, setpoint, actual):
         """!
@@ -32,10 +33,10 @@ class clCont:
         @returns The pulse width modulation of the motor
         """
         PWM = self.Kp * (setpoint - actual)
-        if PWM > 100: # Caps the PWM at 100% if PWM is over 100
-            PWM = 100
-        elif PWM < -100: # Caps the PWM -100% if the PWM is less than -100
-            PWM = -100
+        if PWM > self.limit: # Caps the PWM at 100% if PWM is over 100
+            PWM = self.limit
+        elif PWM < -self.limit: # Caps the PWM -100% if the PWM is less than -100
+            PWM = -self.limit
     
         return PWM
 

@@ -18,8 +18,8 @@ class ServoDriver:
         tim = pyb.Timer(timer, prescaler = 79, period = 19999) 
         self.tim = tim
         # Setup Channel
-        ch1 = tim.channel(1, pyb.Timer.PWM, pin=in1pin)
-        self.ch1 = ch1
+        ch2 = tim.channel(2, pyb.Timer.PWM, pin=in1pin)
+        self.ch2 = ch2
         '''ch2 = tim.channel(2, pyb.Timer.PWM, pin=in2pin)
         self.ch2 = ch2'''
         #return(ch1,ch2,tim)
@@ -38,7 +38,7 @@ class ServoDriver:
         @param ch2 A variable representing timer channel 2 
             to be called for PWM command
         """
-        self.ch1.pulse_width(level)
+        self.ch2.pulse_width(level)
 
         '''self.en_pin.high()
         if level >= 0:
@@ -60,3 +60,4 @@ if __name__ == "__main__":
         trig.runServo(800) # 800=rest, 1500 = fire!
     except KeyboardInterrupt:
         print("Interupted")
+
