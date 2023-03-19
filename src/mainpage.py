@@ -20,7 +20,12 @@
 #
 # @subsection Camera Task
 # The camera task queues the location of the target in its field of view with
-# both the Yaw Axis Controller and the Pitch Axis Controller.
+# both the Yaw Axis Controller and the Pitch Axis Controller. It utilizes a 
+# an algorithm that 'splits' the 32 by 24 pixel grid into an 8 by 24 grid of 
+# 'arrays' (effectively splits them as so, but not technically). It then 
+# compares the average heat value of each split array to find the maximum
+# and returns its x and y location relative to the center axis of the 
+# screen.
 # 
 # @subsection Yaw Task
 # The yaw task takes the current horizontal position and uses the control loop
