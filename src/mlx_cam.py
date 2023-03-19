@@ -20,6 +20,8 @@ example.
 
 @author mwerezak Original files, Summer 2022
 @author JR Ridgely Added simplified wrapper class @c MLX_Cam, January 2023
+@author mecha12 Added code to find the location of the hottest cluster within
+        wrapper class, March 2023
 @copyright (c) 2022 by the authors and released under the GNU Public License,
     version 3.
 """
@@ -116,6 +118,16 @@ class MLX_Cam:
         return image
 
     def find_hotSpot(self, array):
+        """!
+        @brief   Find the hottest average cluster of 1x4 pixels in the image.
+        @details Each pixel in the image is checked and its value is used to
+                 compute a local average (in groups of four). These averages
+                 are then compiled into an array, and the indeces are used to
+                 pinpoint the location of this cluster in a 24x32 array.
+        @param   array The array to be shown, probably @c image
+        @returns A set of coordinates pertaining to the hottest average cluster,
+                 with the assumption that the array is 24x32.
+        """
         av = []
         cAvg = 0
         for row in range(self._height):

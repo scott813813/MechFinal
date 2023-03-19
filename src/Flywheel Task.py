@@ -1,3 +1,12 @@
+"""!
+@file encoder_reader.py
+This file contains code establishing Pin C0 as an output to control a MOSFET switching current to the flywheel circuit.
+The input that controls this switching is acquired by means of the onboard reset button, tied to Pin C13
+
+@author mecha12
+@date   13-March-2023
+"""
+
 import pyb
 
 # Set up a pin as an output and control it
