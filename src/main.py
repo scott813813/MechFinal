@@ -45,18 +45,6 @@ def masterTask(shares):
             if masterState == 0: # Initilization state
                 zeroPoint = utime.ticks_ms()
                 masterState = 1
-                # Setup servo
-                '''
-                
-                pinFlywheel.high() # Spin up flywheels - delete after test
-                utime.sleep_ms(1000)
-                
-                # Hope this fires servo
-                ch2.pulse_width(1700) # 800=rest, 1500 = fire!
-                utime.sleep_ms(1000)
-                ch2.pulse_width(800) # 800=rest, 1500 = fire!
-                pinFlywheel.low() # Spin up flywheels - delete after test
-                '''
                 yield
                 
             elif masterState == 1: # Go to aiming position  
