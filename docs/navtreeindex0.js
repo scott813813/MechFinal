@@ -76,7 +76,7 @@ var NAVTREEINDEX0 =
 "index.html#CameraTask":[0,0,3],
 "index.html#Design":[0,0],
 "index.html#FiringTask":[0,0,4],
-"index.html#MasterTask":[0,0,0],
+"index.html#Master":[0,0,0],
 "index.html#PitchTask":[0,0,2],
 "index.html#YawTask":[0,0,1],
 "main_8py.html":[2,0,3],
