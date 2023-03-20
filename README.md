@@ -27,7 +27,7 @@ the other of a deconstructed turret showcasing the custom bearing.
 The dueling robot uses a set of tasks (specified below) called in a main program 
 to run and target an opponent succesfully. The robot uses MicroPython to control
 two motors and adjust the pitch and yaw axes in order to follow the target (found
-with the provided thermal camera).
+with the provided thermal camera), more information on the software design [here](https://scott813813.github.io/MechFinal/index.html).
 
 ![My Image](docs/Task_Diagram.jpg) <br>
 The task diagram for the dueling robot.
