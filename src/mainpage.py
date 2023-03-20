@@ -1,7 +1,6 @@
 ##
 # \mainpage ME405 Term Project
 # \file mainpage.py
-# 
 # \author mecha12
 #  
 # \section Design Software Design
@@ -14,7 +13,7 @@
 # Reference:
 # \image html Task_Diagram.jpg width=800px
 # 
-# \subsection Master_Task Master Task
+# \subsection MasterTask Master Task
 # The master task shares the current turret status with all other tasks. When
 # the master task is initilized it moves into the it's state 1, where it sends
 # the pitch and yaw motors to move to their initial positions. It next waits until
@@ -28,19 +27,19 @@
 # Reference: 
 # \image html Master_Task_FSM.jpg width=800px
 # 
-# \subsection Yaw_Task Yaw Task
+# \subsection YawTask Yaw Task
 # The yaw task takes the current horizontal position and uses the control loop
 # developed in lab 2 to try to aim at the target. If Yaw Task is at the same
 # position as the target, then the target is located in the horizontal axis and
 # the Yaw Task shares Y_OnTarg to high to the Firing Task.
 # 
-# \subsection Pitch_Task Pitch Task
+# \subsection PitchTask Pitch Task
 # The pitch task takes the current vertical position and uses the control loop
 # developed in lab 2 to try to aim at the target. If Pitch Task is at the same 
 # position of the target, then the target is located in the vertical axis and
 # the Pitch Task shares P_OnTarg to high to the Firing Task.
 #
-# \subsection Camera_Task Camera Task
+# \subsection CameraTask Camera Task
 # The camera task queues the location of the target in its field of view with
 # both the Yaw Axis Controller and the Pitch Axis Controller. It utilizes a 
 # an algorithm that 'splits' the 32 by 24 pixel grid into an 8 by 24 grid of 
@@ -49,7 +48,7 @@
 # and returns its x and y location relative to the center axis of the 
 # screen.
 # 
-# \subsection Firing_Task Firing Task
+# \subsection FiringTask Firing Task
 # The firing task takes the data shared by both the Yaw Task and the Pitch Task
 # in the form of the two booleans: Y_OnTarg and P_On_Targ respectively. If 
 # both booleans are True then the firing task commands the servo motor to 
@@ -57,4 +56,4 @@
 #
 # Reference: 
 # \image html Fire_Task_FSM.jpg width=800px
-##
+#
