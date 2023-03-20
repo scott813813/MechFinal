@@ -1,6 +1,6 @@
 """!
 @file main.py
-    This file that runs the turret. The motors
+    This file manages the tasks in order to run the turret. The motors
     are run using the code developed in the previous ME 405 labs.
     
 @author mecha12

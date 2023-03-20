@@ -65,8 +65,10 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="Software"></a>
 Design</h1>
-<p>The dueling robot uses a set of tasks to run and target an opponent succesfully. The robot uses MicroPython to control two motors and adjust the pitch and yaw axis in order to follow the target found in the provided thermal camera. Update??</p>
-<p>Reference: <img src="docs/Task_Diagram.jpg" alt="My Image" class="inline"/></p>
+<p>The dueling robot uses a set of tasks to run and target an opponent succesfully. The robot uses MicroPython to control two motors and adjust the pitch and yaw axis in order to follow the target found in the provided thermal camera. Once the target is located and tracked, the motor engages the flywheels and servo motor to propel a dart forward.</p>
+<p>Reference: </p><div class="image">
+<img src="docs/Task_Diagram.jpg" alt=""/>
+</div>
 <h2><a class="anchor" id="Button"></a>
 Task</h2>
 <p>The button task shares the status of the button to the camera task. When the button is in its 'On' state the flywheels are primed and the camera is turned on. If the button is toggled again, the button is set to 'Off' and the flywheel and camera are both shut off.</p>
