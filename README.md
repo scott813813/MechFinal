@@ -26,7 +26,7 @@ to run and target an opponent succesfully. The robot uses MicroPython to control
 two motors and adjust the pitch and yaw axes in order to follow the target (found
 with the provided thermal camera).
 
-![My Image](docs/Task Diagram.jpg) <br>
+![My Image](docs/Task_Diagram.jpg) <br>
 The task diagram for the dueling robot, the frequency each task is set to run 
 at is currently being decided.
 
