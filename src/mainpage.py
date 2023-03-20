@@ -1,5 +1,5 @@
 ##
-# @mainpage Term Project Documentation
+# @mainpage
 # @file mainpage.py
 # 
 # @author mecha12
