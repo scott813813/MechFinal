@@ -1,6 +1,6 @@
 var index =
 [
     [ "Software Design", "index.html#Design", [
-      [ "Task", "index.html#Master", null ]
+      [ "Master Task", "index.html#Master_Task", null ]
     ] ]
 ];

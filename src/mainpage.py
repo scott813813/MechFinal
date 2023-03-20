@@ -13,7 +13,7 @@
 # Reference:
 # \image html Task_Diagram.jpg width=800px
 # 
-# \subsection Master Task
+# \subsection Master_Task Master Task
 # The master task shares the current turret status with all other tasks. When
 # the master task is initilized it moves into the it's state 1, where it sends
 # the pitch and yaw motors to move to their initial positions. It next waits until
