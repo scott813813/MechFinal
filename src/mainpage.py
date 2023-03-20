@@ -1,4 +1,4 @@
-#  @mainpage
+# \mainpage Term Project Documentation
 #  @file mainpage.py
 #  Details the tasks and states for the main python file
 #  @ author mecha12
