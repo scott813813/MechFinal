@@ -2,7 +2,7 @@
 #  @ author: mecha12
 #  @mainpage
 #  
-# @section Software Design
+# @section Software Software Design
 # The dueling robot uses a set of tasks to run and target an opponent 
 # succesfully. The robot uses MicroPython to control two motors and adjust the
 # pitch and yaw axis in order to follow the target found in the provided
@@ -12,8 +12,7 @@
 # Reference:
 # \image html Task_Diagram.jpg width=800px
 #
-# @subsection
-# <b> Master Task </b>
+# @subsection Master Master Task
 # The master task shares the current turret status with all other tasks. When
 # the master task is initilized it moves into the it's state 1, where it sends
 # the pitch and yaw motors to move to their initial positions. It next waits until
