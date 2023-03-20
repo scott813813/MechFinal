@@ -1,6 +1,6 @@
 """!
 @file main.py
-    This file that runs the turret   . The motors
+    This file that runs the turret. The motors
     are run using the code developed in the previous ME 405 labs.
     
 @author mecha12
@@ -21,6 +21,11 @@ from mlx_cam import MLX_Cam # Take values from IR camera
 from machine import Pin, I2C
     
 def buttonLogic(pin):
+    """!
+    @brief   Establishes global variable detecting button presses for use in FSM 
+    @details The global, 'buttoncounts' is initialized and incremented by 1  
+    @param   pin, the pin on which the button resides, in this case C13
+    """
     print('button press')
     global buttonCounts
     buttonCounts += 1
@@ -29,6 +34,14 @@ def buttonLogic(pin):
 
 
 def masterTask(shares):
+    """!
+    @brief   Establishes the FSM controlling all turret tasks and loops through it 
+    @details Implemented as a generator function, the masterTask first initializes
+             and clears all logical flags governing actions within the FSM. After
+             this, the FSM is run through continuously, branching as necessary to
+             the appropriate tasks.
+    @param   shares, the function managing the task sharing algorithm
+    """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
     s_YawOnTarg.put(False)
     s_PitchOnTarg.put(False)
@@ -78,6 +91,13 @@ def masterTask(shares):
                 
             
 def yawTask(shares):
+    """!
+    @brief   Communicates with the closed loop controller responsible for yaw control. 
+    @details Implemented as a generator function, the yawTask first initializes
+             the closed loop controller with an initial Kp, then reads from the encoder,
+             calculates the error, and sends this back to the closed loop controller.
+    @param   shares, the function managing the task sharing algorithm
+    """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
     
     '''Control Loop Setup'''
@@ -104,6 +124,13 @@ def yawTask(shares):
                 
 
 def pitchTask(shares): 
+    """!
+    @brief   Communicates with the closed loop controller responsible for pitch control. 
+    @details Implemented as a generator function, the pitchTask first initializes
+             the closed loop controller with an initial Kp, then reads from the encoder,
+             calculates the error, and sends this back to the closed loop controller.
+    @param   shares, the function managing the task sharing algorithm
+    """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
     '''Control Loop Setup'''
     Kp = 0.07				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
@@ -130,6 +157,15 @@ def pitchTask(shares):
     yield
 
 def pictureTask(shares):
+    """!
+    @brief   Communicates with the closed loop controllers responsible for yaw and pitch control,
+             and calculates error in position from a thermal image.
+    @details Implemented as a generator function, the pictureTask first takes an image, then uses
+             the built-in findhottest() function to get the coordinates of the hottest pixel cluster.
+             From this, the error in position of the turret is calculated and fed to the closed-loop
+             controllers to move the turret to the desired position.
+    @param   shares, the function managing the task sharing algorithm
+    """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
     s_TimeToTrack.put(False)
     while True:    
@@ -196,6 +232,13 @@ def pictureTask(shares):
     yield
    
 def fireTask(shares):
+    """!
+    @brief   Fires the turret.
+    @details The task first checks that the button has been pressed, then waits 4.9 seconds
+             before taking a picture. The flywheels spin up, and if the aiming error is low
+             the servo is actuated to fire the turret.
+    @param   shares, the function managing the task sharing algorithm
+    """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
     fireState = 0
     while True:
