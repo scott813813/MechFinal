@@ -30,8 +30,7 @@ two motors and adjust the pitch and yaw axes in order to follow the target (foun
 with the provided thermal camera).
 
 ![My Image](docs/Task_Diagram.jpg) <br>
-The task diagram for the dueling robot, the frequency each task is set to run 
-at is currently being decided.
+The task diagram for the dueling robot.
 
 ### Results
 After creating our mechanical design and troubleshooting our software and code, we
