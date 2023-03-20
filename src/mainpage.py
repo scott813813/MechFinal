@@ -6,9 +6,9 @@
 # The dueling robot uses a set of tasks to run and target an opponent 
 # succesfully. The robot uses MicroPython to control two motors and adjust the
 # pitch and yaw axis in order to follow the target found in the provided
-# thermal camera.
+# thermal camera. Update??
 #
-# Reference: ![My Image](docs/Task_Diagram.jpg) Update?
+# Reference: ![My Image](docs/Task_Diagram.jpg)
 #
 # @subsection Button Task
 # The button task shares the status of the button to the camera task. When the
