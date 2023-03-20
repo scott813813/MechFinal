@@ -9,9 +9,13 @@
 # thermal camera. Once the target is located and tracked, the motor engages
 # the flywheels and servo motor to propel a dart forward.
 #
+# @subsection main main.py
+# The main.py file uses a task sharing system to manage the various tasks to run
+# the turret.
+#
 # Reference:
 # \image html Task_Diagram.jpg width=800px
-#
+# 
 # @subsubsection Master_Task Master Task
 # The master task shares the current turret status with all other tasks. When
 # the master task is initilized it moves into the it's state 1, where it sends
@@ -38,7 +42,7 @@
 # position of the target, then the target is located in the vertical axis and
 # the Pitch Task shares P_OnTarg to high to the Firing Task.
 #
-# @subssubection Camera_Task Camera Task
+# @subsubsection Camera_Task Camera Task
 # The camera task queues the location of the target in its field of view with
 # both the Yaw Axis Controller and the Pitch Axis Controller. It utilizes a 
 # an algorithm that 'splits' the 32 by 24 pixel grid into an 8 by 24 grid of 
