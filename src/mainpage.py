@@ -26,19 +26,19 @@
 # Reference: 
 # \image html Master_Task_FSM.jpg width=800px
 # 
-# @subsection Yaw Task
+# @subsection Yaw Yaw Task
 # The yaw task takes the current horizontal position and uses the control loop
 # developed in lab 2 to try to aim at the target. If Yaw Task is at the same
 # position as the target, then the target is located in the horizontal axis and
 # the Yaw Task shares Y_OnTarg to high to the Firing Task.
 # 
-# @subsection Pitch Task
+# @subsection     Pitch Task
 # The pitch task takes the current vertical position and uses the control loop
 # developed in lab 2 to try to aim at the target. If Pitch Task is at the same 
 # position of the target, then the target is located in the vertical axis and
 # the Pitch Task shares P_OnTarg to high to the Firing Task.
 #
-# @subsection  Camera Task
+# @subsection      Camera Task
 # The camera task queues the location of the target in its field of view with
 # both the Yaw Axis Controller and the Pitch Axis Controller. It utilizes a 
 # an algorithm that 'splits' the 32 by 24 pixel grid into an 8 by 24 grid of 
@@ -47,8 +47,7 @@
 # and returns its x and y location relative to the center axis of the 
 # screen.
 # 
-# @subsection
-# Firing Task
+# @subsection        Firing Task
 # The firing task takes the data shared by both the Yaw Task and the Pitch Task
 # in the form of the two booleans: Y_OnTarg and P_On_Targ respectively. If 
 # both booleans are True then the firing task commands the servo motor to 

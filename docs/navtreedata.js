@@ -27,9 +27,10 @@ var NAVTREE =
   [ "Mech 405: Term Project", "index.html", [
     [ "Software Design", "index.html#Software", [
       [ "Master Task", "index.html#Master", null ],
-      [ "Task", "index.html#Yaw", null ],
+      [ "Yaw Task", "index.html#Yaw", null ],
       [ "Task", "index.html#Pitch", null ],
-      [ "Task", "index.html#Camera", null ]
+      [ "Task", "index.html#Camera", null ],
+      [ "Task", "index.html#Firing", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],

@@ -74,6 +74,7 @@ var NAVTREEINDEX0 =
 "hierarchy.html":[1,2],
 "index.html":[],
 "index.html#Camera":[0,3],
+"index.html#Firing":[0,4],
 "index.html#Master":[0,0],
 "index.html#Pitch":[0,2],
 "index.html#Software":[0],
