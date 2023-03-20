@@ -26,13 +26,13 @@
 # Reference: 
 # \image html Master_Task_FSM.jpg width=800px
 # 
-# @subsection Yaw Yaw Task
+# @subsection <Yaw Task>
 # The yaw task takes the current horizontal position and uses the control loop
 # developed in lab 2 to try to aim at the target. If Yaw Task is at the same
 # position as the target, then the target is located in the horizontal axis and
 # the Yaw Task shares Y_OnTarg to high to the Firing Task.
 # 
-# @subsection     Pitch Task
+# @subsection Pitch Pitch Task
 # The pitch task takes the current vertical position and uses the control loop
 # developed in lab 2 to try to aim at the target. If Pitch Task is at the same 
 # position of the target, then the target is located in the vertical axis and
