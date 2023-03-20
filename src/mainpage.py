@@ -1,6 +1,7 @@
 ##
 # \mainpage ME405 Term Project
 # \author mecha12
+# \file mainpage.py
 #  
 # \section Design Software Design
 # The dueling robot uses a set of tasks to run and target an opponent 
