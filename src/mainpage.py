@@ -12,7 +12,7 @@
 #
 # \subsection mainFile Main
 # The main.py file uses a task management file to manage the yaw, pitch, camera
-# and firing tasks
+# and firing tasks. The task diagram of the file is below.
 #
 # Reference:
 # \image html Task_Diagram.jpg width=800px
@@ -61,4 +61,11 @@
 # Reference: 
 # \image html Fire_Task_FSM.jpg width=800px
 #
+# \subsection camFile mlx_cam
+# The mlx_cam.py file is used to take images through the provided IR camera.
+# This file then returns the x and y components of the target.
+#
+# \subsection motorFile motor_driver
+# The motor_driver.py file manages the positioning of the motors by reading
+# the motor encoders and then sending an appropriate PWM signal to the motors.
 

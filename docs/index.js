@@ -7,6 +7,8 @@ var index =
         [ "Pitch Task", "index.html#Pitch_Task", null ],
         [ "Camera Task", "index.html#Camera_Task", null ],
         [ "Firing Task", "index.html#Firing_Task", null ]
-      ] ]
+      ] ],
+      [ "mlx_cam", "index.html#camFile", null ],
+      [ "motor_driver", "index.html#motorFile", null ]
     ] ]
 ];
