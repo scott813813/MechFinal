@@ -12,7 +12,8 @@
 # Reference:
 # \image html Task_Diagram.jpg width=800px
 #
-# @subsection  Master Task
+# @subsection
+# <b> Master Task </b>
 # The master task shares the current turret status with all other tasks. When
 # the master task is initilized it moves into the it's state 1, where it sends
 # the pitch and yaw motors to move to their initial positions. It next waits until
@@ -23,7 +24,8 @@
 # servo motor. Once the ten second firing window passes, powerdown the
 # flywheels and send the yaw motor back to its starting position.
 #
-# Reference: docs/Button_FSM.jpg
+# Reference: 
+# \image html Master_Task_FSM.jpg width=800px
 # 
 # @subsection Yaw Task
 # The yaw task takes the current horizontal position and uses the control loop
@@ -46,10 +48,12 @@
 # and returns its x and y location relative to the center axis of the 
 # screen.
 # 
-# @subsection Firing Task
+# @subsection
+# Firing Task
 # The firing task takes the data shared by both the Yaw Task and the Pitch Task
 # in the form of the two booleans: Y_OnTarg and P_On_Targ respectively. If 
 # both booleans are True then the firing task commands the servo motor to 
 # articulate a dart into the rotating flywheels. 
 #
-# Reference: docs/Firing_FSM.jpg
+# Reference: 
+# \image html Fire_Task_FSM.jpg width=800px
