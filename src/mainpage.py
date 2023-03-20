@@ -1,7 +1,8 @@
-\mainpage Term Project Documentation
-#  @file mainpage.py
-#  Details the tasks and states for the main python file
-@author mecha12
+##
+# @mainpage Term Project Documentation
+# @file mainpage.py
+# 
+# @author mecha12
 #  
 # @section Design Software Design
 # The dueling robot uses a set of tasks to run and target an opponent 
