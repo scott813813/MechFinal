@@ -10,7 +10,7 @@
 # the flywheels and servo motor to propel a dart forward.
 #
 # Reference:
-# \image html docs/Task_Diagram.jpg
+# \image html Task_Diagram.jpg
 #
 # @subsection Button Task
 # The button task shares the status of the button to the camera task. When the

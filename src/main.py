@@ -195,7 +195,7 @@ def pictureTask(shares):
    
 def fireTask(shares):
     """!
-    @brief   Fires the turret.
+    @brief   Fires the turret by spinning the flywheels and articulating the servo motor.
     @details The task first checks that the button has been pressed, then waits 4.9 seconds
              before taking a picture. The flywheels spin up, and if the aiming error is low
              the servo is actuated to fire the turret.
