@@ -1,5 +1,5 @@
 ## @file mainpage.py
-#  Details the tasks and states for the main python file
+#  
 #  @ author: mecha12
 #  
 # @section Software_Design Software Design
