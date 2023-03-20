@@ -1,6 +1,6 @@
 ## @file mainpage.py
 #  @ author: mecha12
-#  @mainpage: 
+#  @mainpage Details the tasks and states for the main python file
 #  
 # @section Software_Design Software Design
 # The dueling robot uses a set of tasks to run and target an opponent 
