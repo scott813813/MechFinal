@@ -8,7 +8,7 @@
 # pitch and yaw axis in order to follow the target found in the provided
 # thermal camera.
 #
-# Reference: ![My Image](docs/Task_Diagram.jpg)
+# Reference: ![My Image](docs/Task_Diagram.jpg) Update?
 #
 # @subsection Button Task
 # The button task shares the status of the button to the camera task. When the
