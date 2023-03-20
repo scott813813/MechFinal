@@ -68,7 +68,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 Software Design</h1>
 <p>The dueling robot uses a set of tasks to run and target an opponent succesfully. The robot uses MicroPython to control two motors and adjust the pitch and yaw axis in order to follow the target found in the provided thermal camera. Once the target is located and tracked, the motor engages the flywheels and servo motor to propel a dart forward.</p>
 <h2><a class="anchor" id="mainFile"></a>
-Main</h2>
+main</h2>
 <p>The <a class="el" href="main_8py.html" title="This file manages the tasks in order to run the turret.">main.py</a> file uses a task management file to manage the yaw, pitch, camera and firing tasks. The task diagram of the file is below.</p>
 <p>Reference: </p><div class="image">
 <img src="Task_Diagram.jpg" alt="" width="800px"/>
@@ -99,7 +99,19 @@ mlx_cam</h2>
 <p>The <a class="el" href="mlx__cam_8py.html" title="RAW VERSION This version uses a stripped down MLX90640 driver which produces only raw data,...">mlx_cam.py</a> file is used to take images through the provided IR camera. This file then returns the x and y components of the target.</p>
 <h2><a class="anchor" id="motorFile"></a>
 motor_driver</h2>
-<p>The <a class="el" href="motor__driver_8py.html" title="This file contains code to run the motor.">motor_driver.py</a> file manages the positioning of the motors by reading the motor encoders and then sending an appropriate PWM signal to the motors. </p>
+<p>The <a class="el" href="motor__driver_8py.html" title="This file contains code to run the motor.">motor_driver.py</a> file manages the PWM signal sent to the provided motor in order to position the motor at the desired location.</p>
+<h2><a class="anchor" id="encoderReaderFile"></a>
+encoder_reader</h2>
+<p>The <a class="el" href="encoder__reader_8py.html" title="This file contains code which computes the reading from the encoder in order to evaluate the speed of...">encoder_reader.py</a> file reads and tracks the inputed motor's encoder and returns the value.</p>
+<h2><a class="anchor" id="closedLoopFile"></a>
+closed_loop_control</h2>
+<p>The <a class="el" href="closed__loop__control_8py.html" title="This file contains code which controls the motors position by taking the proportional gain constant,...">closed_loop_control.py</a> file uses runs a closed loop controller on the inputed motor to assist in positioning the motor.</p>
+<h2><a class="anchor" id="costaskFile"></a>
+cotask</h2>
+<p>The <a class="el" href="cotask_8py.html" title="This file contains classes to run cooperatively scheduled tasks in a multitasking system.">cotask.py</a> file is one of the two behind the scenes task management files which assist <a class="el" href="main_8py.html" title="This file manages the tasks in order to run the turret.">main.py</a> in running. It specifically assists with helping tasks run after each other.</p>
+<h2><a class="anchor" id="task_shareFile"></a>
+task_share</h2>
+<p>The <a class="el" href="task__share_8py.html" title="This file contains classes which allow tasks to share data without the risk of data corruption by int...">task_share.py</a> file is one of the two behind the scenes task management files which assist <a class="el" href="main_8py.html" title="This file manages the tasks in order to run the turret.">main.py</a> in running. It specifically assists with sharing data with each task. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->

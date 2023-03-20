@@ -10,7 +10,7 @@
 # thermal camera. Once the target is located and tracked, the motor engages
 # the flywheels and servo motor to propel a dart forward.
 #
-# \subsection mainFile Main
+# \subsection mainFile main
 # The main.py file uses a task management file to manage the yaw, pitch, camera
 # and firing tasks. The task diagram of the file is below.
 #
@@ -66,6 +66,23 @@
 # This file then returns the x and y components of the target.
 #
 # \subsection motorFile motor_driver
-# The motor_driver.py file manages the positioning of the motors by reading
-# the motor encoders and then sending an appropriate PWM signal to the motors.
-
+# The motor_driver.py file manages the PWM signal sent to the provided motor in
+# order to position the motor at the desired location.
+#
+# \subsection encoderReaderFile encoder_reader
+# The encoder_reader.py file reads and tracks the inputed motor's encoder and
+# returns the value.
+#
+# \subsection closedLoopFile closed_loop_control
+# The closed_loop_control.py file uses runs a closed loop controller on the
+# inputed motor to assist in positioning the motor.
+#
+# \subsection costaskFile cotask
+# The cotask.py file is one of the two behind the scenes task management
+# files which assist main.py in running. It specifically assists with
+# helping tasks run after each other.
+#
+# \subsection task_shareFile task_share
+# The task_share.py file is one of the two behind the scenes task management
+# files which assist main.py in running. It specifically assists with
+# sharing data with each task.
