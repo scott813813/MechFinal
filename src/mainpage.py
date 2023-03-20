@@ -1,6 +1,5 @@
 ##
 # \mainpage ME405 Term Project
-# \file mainpage.py
 # \author mecha12
 #  
 # \section Design Software Design

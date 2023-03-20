@@ -73,6 +73,7 @@ var NAVTREEINDEX0 =
 "hierarchy.html":[1,2],
 "index.html":[],
 "index.html":[0],
+"index.html#Design":[0,0],
 "main_8py.html":[2,0,3],
 "main_8py.html#a56e24e039467f4e5a5ca68cf2a92b13c":[2,0,3,0],
 "main_8py.html#a7292f1319c6d98615b4a0639e7b436d9":[2,0,3,2],
@@ -80,12 +81,11 @@ var NAVTREEINDEX0 =
 "main_8py.html#ac0aa8dd89aaebf183007266df72cbabf":[2,0,3,3],
 "main_8py.html#ac43371232343c3afb8a102819a45f767":[2,0,3,4],
 "main_8py.html#ad170ef078b19476355119be652c19def":[2,0,3,5],
-"mainpage_8py.html":[2,0,4],
-"mlx__cam_8py.html":[2,0,5],
-"motor__driver_8py.html":[2,0,6],
+"mlx__cam_8py.html":[2,0,4],
+"motor__driver_8py.html":[2,0,5],
 "pages.html":[],
-"task__share_8py.html":[2,0,7],
-"task__share_8py.html#a130cad0bc96d3138e77344ea85586b7c":[2,0,7,3],
-"task__share_8py.html#a75818e5b662453e3723d0f234c85e519":[2,0,7,4],
-"task__share_8py.html#af5ee68a35f9ce19aef4c4bd4ab7c2679":[2,0,7,5]
+"task__share_8py.html":[2,0,6],
+"task__share_8py.html#a130cad0bc96d3138e77344ea85586b7c":[2,0,6,3],
+"task__share_8py.html#a75818e5b662453e3723d0f234c85e519":[2,0,6,4],
+"task__share_8py.html#af5ee68a35f9ce19aef4c4bd4ab7c2679":[2,0,6,5]
 };
