@@ -1,4 +1,5 @@
-## @file mainpage.py
+#  @mainpage
+#  @file mainpage.py
 #  Details the tasks and states for the main python file
 #  @ author mecha12
 #  
