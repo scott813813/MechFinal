@@ -88,7 +88,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ac0aa8dd89aaebf183007266df72cbabf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Communicates with the closed loop controllers responsible for yaw and pitch control, and calculates error in position from a thermal image.  <br /></td></tr>
 <tr class="separator:ac0aa8dd89aaebf183007266df72cbabf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95b9eaeb5862aea8fd747dd7dd243c94"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8py.html#a95b9eaeb5862aea8fd747dd7dd243c94">main.fireTask</a> (shares)</td></tr>
-<tr class="memdesc:a95b9eaeb5862aea8fd747dd7dd243c94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires the turret.  <br /></td></tr>
+<tr class="memdesc:a95b9eaeb5862aea8fd747dd7dd243c94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fires the turret by spinning the flywheels and articulating the servo motor.  <br /></td></tr>
 <tr class="separator:a95b9eaeb5862aea8fd747dd7dd243c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -270,7 +270,7 @@ task_share&#160;</td><td class="memItemRight" valign="bottom"><b>main.s_StopShoo
       </table>
 </div><div class="memdoc">
 
-<p>Fires the turret. </p>
+<p>Fires the turret by spinning the flywheels and articulating the servo motor. </p>
 <p>The task first checks that the button has been pressed, then waits 4.9 seconds before taking a picture. The flywheels spin up, and if the aiming error is low the servo is actuated to fire the turret. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">shares,the</td><td>function managing the task sharing algorithm. </td></tr>
