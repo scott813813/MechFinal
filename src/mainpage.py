@@ -1,8 +1,8 @@
 ##
-# @mainpage ME405
-# @file mainpage.py
+#  @mainpage ME405
+#  @file mainpage.py
 # 
-# @author mecha12
+#  @author mecha12
 #  
 # @section Design Software Design
 # The dueling robot uses a set of tasks to run and target an opponent 
