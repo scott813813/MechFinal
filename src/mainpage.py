@@ -9,7 +9,7 @@
 # thermal camera. Once the target is located and tracked, the motor engages
 # the flywheels and servo motor to propel a dart forward.
 #
-# @subsection main main.py
+# @subsection main main
 # The main.py file uses a task sharing system to manage the various tasks to run
 # the turret.
 #
