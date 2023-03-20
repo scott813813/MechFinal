@@ -223,9 +223,9 @@ task_share&#160;</td><td class="memItemRight" valign="bottom"><b>main.s_StopShoo
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file manages the tasks in order to run the turret. </p>
-<p>The motors are run using the code developed in the previous ME 405 labs.</p>
+<p>The motors are run using the code developed in the previous ME 405 labs, while the tasks to run the camera and firing mechanism are unique to this lab assignment.</p>
 <dl class="section author"><dt>Author</dt><dd>mecha12 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>11-Mar-2023 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>20-Mar-2023 </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a56e24e039467f4e5a5ca68cf2a92b13c" name="a56e24e039467f4e5a5ca68cf2a92b13c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a56e24e039467f4e5a5ca68cf2a92b13c">&#9670;&#160;</a></span>buttonLogic()</h2>
@@ -273,7 +273,7 @@ task_share&#160;</td><td class="memItemRight" valign="bottom"><b>main.s_StopShoo
 <p>Fires the turret. </p>
 <p>The task first checks that the button has been pressed, then waits 4.9 seconds before taking a picture. The flywheels spin up, and if the aiming error is low the servo is actuated to fire the turret. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">shares,the</td><td>function managing the task sharing algorithm </td></tr>
+    <tr><td class="paramname">shares,the</td><td>function managing the task sharing algorithm. </td></tr>
   </table>
   </dd>
 </dl>

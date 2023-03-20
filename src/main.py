@@ -1,12 +1,13 @@
 """!
 @file main.py
     This file manages the tasks in order to run the turret. The motors
-    are run using the code developed in the previous ME 405 labs.
+    are run using the code developed in the previous ME 405 labs, while
+    the tasks to run the camera and firing mechanism are unique to this
+    lab assignment.
     
 @author mecha12
-@date   11-Mar-2023
+@date   20-Mar-2023
 """
-
 import gc # Memory allocation garbage collector
 import pyb # Micropython library
 import utime # Micropython version of time library
@@ -18,7 +19,7 @@ from closed_loop_control import clCont # The closed loop control method from clo
 from motor_driver import MotorDriver # The method to drive the motor from motor_drive.py
 from encoder_reader import EncoderReader # Read encoder method from encoder_reader.py
 from mlx_cam import MLX_Cam # Take values from IR camera
-from machine import Pin, I2C
+from machine import Pin, I2C # Used for the ISR command 
     
 def buttonLogic(pin):
     """!
@@ -31,8 +32,6 @@ def buttonLogic(pin):
     buttonCounts += 1
     print(buttonCounts)
 
-
-
 def masterTask(shares):
     """!
     @brief   Establishes the FSM controlling all turret tasks and loops through it 
@@ -43,18 +42,14 @@ def masterTask(shares):
     @param   shares, the function managing the task sharing algorithm
     """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
-    s_YawOnTarg.put(False)
-    s_PitchOnTarg.put(False)
-    s_TimeToTrack.put(False)
-    s_TimeToFire.put(False)
-    s_StopShooting.put(False)
-    masterState = 0
-    #yawStartPos = 13272 # 180 degrees, ie 3.32 rotations with a gear ratio of 15
-    #pitchStartPos = 0 # Keep steady heading
+    s_YawOnTarg.put(False) # Input starting value for s_YawOnTarg flag
+    s_PitchOnTarg.put(False) # Input starting value for s_PitchOnTarg flag
+    s_TimeToTrack.put(False) # Input starting value for s_TimeToTrack flag
+    s_TimeToFire.put(False) # Input starting value for s_TimeToFire flag
+    s_StopShooting.put(False) # Input starting value for s_StopShooting flag
+    masterState = 0 # State variable for masterTask
     while True:
-        
-        
-        while buttonCounts == 1:
+        while buttonCounts == 1: # If the E-Stop button is pressed only once, run the task
             if masterState == 0: # Initilization state
                 zeroPoint = utime.ticks_ms()
                 masterState = 1
@@ -68,10 +63,7 @@ def masterTask(shares):
                 yield
             
             elif masterState == 2: # Wait four seconds until time to track, and then five to fire
-                
                 timeElapse = utime.ticks_ms() - zeroPoint # Time since button pressed
-                #print('Time',timeElapse)
-                
                 if timeElapse >= idlePeriod: # Stop firing
                     s_StopShooting.put(True)
                     yield
@@ -88,8 +80,6 @@ def masterTask(shares):
             yield
         yield
 
-                
-            
 def yawTask(shares):
     """!
     @brief   Communicates with the closed loop controller responsible for yaw control. 
@@ -99,30 +89,22 @@ def yawTask(shares):
     @param   shares, the function managing the task sharing algorithm
     """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
-    
     '''Control Loop Setup'''
-    Kp = 0.06				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
+    Kp = 0.06 # Proportional gain value
     cll = clCont(0, Kp, 40) # Set proportional constant gain for yaw motor
     while True:
-        while buttonCounts == 1:
+        while buttonCounts == 1: # If the E-Stop button is pressed only once, run the task
             p = encY.read() # Current position of yaw motor
             if p > 60000 or p < -60000:
                 encY.zero()
                 p = encY.read()
-            #print("position")
-            #print(p)
-            #print("desired")
-           # print(s_YawPos.get())
+                
             lvl = cll.run(s_YawPos.get(), p) # Run closed loop controller
             moeY.set_duty_cycle(lvl) # Set the duty cycle
-            # send new value high, 
-            # scrub current reading, and set it to 0
-            # go to new reading, and set new value reading low
             yield
         yield
     yield
                 
-
 def pitchTask(shares): 
     """!
     @brief   Communicates with the closed loop controller responsible for pitch control. 
@@ -133,25 +115,17 @@ def pitchTask(shares):
     """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
     '''Control Loop Setup'''
-    Kp = 0.07				#0.1 excessive oscillation,  0.005 good performance, 0.002 underdamped
+    Kp = 0.07 # Proportial gain value
     cll = clCont(0, Kp, 80) # Set proportional constant gain for yaw motor
     while True:
-        while buttonCounts == 1:
+        while buttonCounts == 1: # If the E-Stop button is pressed only once, run the task
             p = encP.read() # Current position of pitch motor
             if p > 60000 or p < -60000:
                 encY.zero()
                 p = encY.read()
-            #print("pitch position")
-            #print(p)
+
             lvl = cll.run(s_PitchPos.get(), p) # Run closed loop controller
-            #print("level")
-            #print(lvl)
-            #print("pitch desired")
-            #print(s_PitchPos.get())
             moeP.set_duty_cycle(lvl) # Set the duty cycle
-            # send new value high, 
-            # scrub current reading, and set it to 0
-            # go to new reading, and set new value reading low
             yield
         yield
     yield
@@ -167,50 +141,37 @@ def pictureTask(shares):
     @param   shares, the function managing the task sharing algorithm
     """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
-    s_TimeToTrack.put(False)
+    s_TimeToTrack.put(False) # State veriable for pictureTask
     while True:    
-    # take picture
-    # find brightest spot
-    # determine yawDif and pitchDif
-        while buttonCounts == 1:
-            
-            if s_TimeToTrack.get() == False:
+        while buttonCounts == 1: # If the E-Stop button is pressed only once, run the task
+            if s_TimeToTrack.get() == False: # On startup, set datums at the initial encoder readings
                 yawDatum = encY.read()
                 pitchDatum = encP.read()
-            elif s_TimeToTrack.get() == True: # Only aim if given flag to aim
                 
+            elif s_TimeToTrack.get() == True: # Only aim if given flag to aim
                 image = camera.get_image()
-                H, V = camera.find_hotSpot(image)
+                H, V = camera.find_hotSpot(image) # Find current hot spot from camera
                 print("Yaw Pos ", H, "Pitch Pos", V)
                 
-                Ke = 8
-                
-                yawTicks = Ke * math.atan(((H - 16)/4)/18)*4000/3.14 + yawDatum
+                Ke = 8 # Gain value for yaw axis control
+                yawTicks = Ke * math.atan(((H - 16)/4)/18)*4000/3.14 + yawDatum # Determine the number of encoder ticks to reach the target in the yaw axis
                 print('ticks', yawTicks)
-                pitchTicks = math.atan((V*0.75*3.7/12)/18)*4000/3.14 + pitchDatum
+                pitchTicks = math.atan((V*0.75*3.7/12)/18)*4000/3.14 + pitchDatum # Determine the number of encoder ticks to reach the target in the pitch axis
+
+                yawPosRead = encY.read() # Store the current yaw position
+                pitchPosRead = encP.read() # Store the current pitch position
                 
-                #yawPos = yawStartPos + yawTicks
-                #pitchPos = pitchStartPos + pitchTicks
-                
-                yawPosRead = encY.read()
-                pitchPosRead = encP.read()
-                
-                yawDif = yawTicks - yawPosRead
-                if yawDif < 0:
+                yawDif = yawTicks - yawPosRead # Calculate difference between expected and actual yaw position
+                if yawDif < 0: # Account for left bias in the yaw control system
                     yawTicks = yawTicks + 1.1 * yawDif
-                pitchDif = pitchPosRead - pitchTicks
+                pitchDif = pitchPosRead - pitchTicks # Calculate difference between expected and actual pitch position
                 
-                #print(yawDif, pitchDif)
-                
-            
-                print(yawDif)
-                
-                if abs(yawDif) <= 250:
+                if abs(yawDif) <= 250: # Determine if the yaw position is under the threshold to be on target
                     s_YawOnTarg.put(True)
                     print('yaw on targ')
                     yield
                     
-                else:
+                else: # If the yaw position is not on target, recalculate the yaw position
                     s_YawOnTarg.put(False)
                     print('datum', yawDatum)
                     print('desired', yawTicks)
@@ -218,11 +179,12 @@ def pictureTask(shares):
                     s_YawPos.put(int(yawTicks))
                     yield
                     
-                if abs(pitchDif) <= 200:
+                if abs(pitchDif) <= 200: # Determine if the pitch position is under the threshold to be on target
                     s_PitchOnTarg.put(True)
                     print('pitch on targ')
                     yield
-                else:
+                    
+                else: # If the pitch position is not on target, recalculate the pitch position
                     s_PitchOnTarg.put(False)
                     pitchPos = pitchDif + pitchDatum
                     s_PitchPos.put(int(pitchPos))
@@ -237,12 +199,12 @@ def fireTask(shares):
     @details The task first checks that the button has been pressed, then waits 4.9 seconds
              before taking a picture. The flywheels spin up, and if the aiming error is low
              the servo is actuated to fire the turret.
-    @param   shares, the function managing the task sharing algorithm
+    @param   shares, the function managing the task sharing algorithm.
     """
     s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting = shares
-    fireState = 0
+    fireState = 0 # State variable for fireTask
     while True:
-        while buttonCounts == 1:
+        while buttonCounts == 1: # If the E-Stop button is pressed only once, run the task
             if fireState == 0: # Initialization state
                 fireState = 1
                 yield
@@ -251,31 +213,25 @@ def fireTask(shares):
                 print('Track', s_TimeToTrack.get())
                 if s_TimeToTrack.get() == True:
                     fireState = 2
-                    ch2.pulse_width(800) # 800=rest, 1500 = fire!
+                    ch2.pulse_width(800) # Set the servo motor back to the neutral position: 800=rest, 1500 = fire!
                     pinFlywheel.high() # Spin up flywheels
                     yield
                 yield
                     
             elif fireState == 2: # Tracking state, spin up flywheels
-                
                 if s_TimeToFire.get() == True: # Once five seconds have passed, fire
-                    
                     fireState = 3
                     yield
-                
                 yield
                 
-            elif fireState == 3:
+            elif fireState == 3: # Fire state, if ready to fire then fire
                 if s_StopShooting.get() == True: # After ten second shooting window
                     fireState = 4
                     yield
                             
-                # set code to actuate servo
-                elif s_YawOnTarg.get() == True and s_PitchOnTarg.get() == True:
-                    ch2.pulse_width(1500) # 800=rest, 1500 = fire!
-                    print('Fire')
-                    # fire
-                    
+                elif s_YawOnTarg.get() == True and s_PitchOnTarg.get() == True: # Turn the servo motor on if on target
+                    ch2.pulse_width(1500) # Actuate the servo motor: 800=rest, 1500 = fire!
+                    print('Fire')  
                 yield
                 
             elif fireState == 4: # Idle state, after ten seconds of shooting
@@ -285,19 +241,16 @@ def fireTask(shares):
                 ch2.pulse_width(800) # 800=rest, 1500 = fire!
                 s_YawPos.put(0)
                 yield
-                
             yield
-
-                # stop firing
-        else:
-            pinFlywheel.low() # turn the flywheel off
             
+        else: # stop firing
+            pinFlywheel.low() # turn the flywheel off
             yield
         yield
     yield
 
-buttonInt = pyb.ExtInt(pyb.Pin.board.PC13, pyb.ExtInt.IRQ_FALLING, pyb.Pin.PULL_UP, buttonLogic)
-
+# Set the interrupt button pin
+buttonInt = pyb.ExtInt(pyb.Pin.board.PC13, pyb.ExtInt.IRQ_FALLING, pyb.Pin.PULL_UP, buttonLogic) 
 
 if __name__ == "__main__":
     
@@ -346,17 +299,12 @@ if __name__ == "__main__":
     
     pinA8 = pyb.Pin(pyb.Pin.board.PA8, pyb.Pin.OUT_PP) # Servo port
     
-    
     yawStartPos = 18200 # 180 degrees, ie 3.32 rotations with a gear ratio of 15, 18200 for 180 degrees clockwise
     
     pitchStartPos = 0 # Keep steady heading, -15000 for tilt from downward to median
-    #global buttonGo
-    #buttonGo = False
     global buttonCounts
     buttonCounts = 0
 
-    
-    
     # Create a set of shares detailing the statuse of the pitch and firing states
     s_YawPos = task_share.Share('i', thread_protect=False, name="Yaw Position")
     s_PitchPos = task_share.Share('i', thread_protect=False, name="Pitch Position")
@@ -381,7 +329,7 @@ if __name__ == "__main__":
     task5 = cotask.Task(fireTask, name="Fire Task", priority=4, period=100,
                         profile=True, trace=False, shares=(s_YawPos, s_PitchPos, s_YawOnTarg, s_PitchOnTarg, s_TimeToTrack, s_TimeToFire, s_StopShooting))
                         
-    
+    # Create the cotask list which will be run later in the program
     cotask.task_list.append(task1)
     cotask.task_list.append(task2)
     cotask.task_list.append(task3)
@@ -392,9 +340,9 @@ if __name__ == "__main__":
     # possible before the real-time scheduler is started
     gc.collect()
     
+    '''Run Tasks'''
     while True:
         try:
             cotask.task_list.pri_sched()
         except KeyboardInterrupt:
             break
-
