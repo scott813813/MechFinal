@@ -10,7 +10,7 @@
 # the flywheels and servo motor to propel a dart forward.
 #
 # Reference:
-# \image html Task_Diagram.jpg
+# \image html Task_Diagram.jpg width=800px
 #
 # @subsection  Master Task
 # The master task shares the current turret status with all other tasks. When
