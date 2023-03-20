@@ -74,6 +74,7 @@ var NAVTREEINDEX0 =
 "index.html":[],
 "index.html":[0],
 "index.html#Design":[0,0],
+"index.html#Master":[0,0,0],
 "main_8py.html":[2,0,3],
 "main_8py.html#a56e24e039467f4e5a5ca68cf2a92b13c":[2,0,3,0],
 "main_8py.html#a7292f1319c6d98615b4a0639e7b436d9":[2,0,3,2],
