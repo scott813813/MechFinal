@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Mech 405: Term Project: Mech 405: Term Project</title>
+<title>Mech 405: Term Project: Class Members - Variables</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -55,36 +55,26 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('index.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('functions_vars.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
-<div><div class="header">
-  <div class="headertitle"><div class="title">Mech 405: Term Project </div></div>
-</div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="Software"></a>
-Design</h1>
-<p>The dueling robot uses a set of tasks to run and target an opponent succesfully. The robot uses MicroPython to control two motors and adjust the pitch and yaw axis in order to follow the target found in the provided thermal camera. Update??</p>
-<p>Reference: <img src="docs/Task_Diagram.jpg" alt="My Image" class="inline"/></p>
-<h2><a class="anchor" id="Button"></a>
-Task</h2>
-<p>The button task shares the status of the button to the camera task. When the button is in its 'On' state the flywheels are primed and the camera is turned on. If the button is toggled again, the button is set to 'Off' and the flywheel and camera are both shut off.</p>
-<p>Reference: docs/Button_FSM.jpg</p>
-<h2><a class="anchor" id="Camera"></a>
-Task</h2>
-<p>The camera task queues the location of the target in its field of view with both the Yaw Axis Controller and the Pitch Axis Controller. It utilizes a an algorithm that 'splits' the 32 by 24 pixel grid into an 8 by 24 grid of 'arrays' (effectively splits them as so, but not technically). It then compares the average heat value of each split array to find the maximum and returns its x and y location relative to the center axis of the screen.</p>
-<h2><a class="anchor" id="Yaw"></a>
-Task</h2>
-<p>The yaw task takes the current horizontal position and uses the control loop try to aim at the target. If Yaw Task is at the same position of the target for several cycles, then the target is located in the horizontal axis and the Yaw Task shares Y_OnTarg to high to the Firing Task.</p>
-<h2><a class="anchor" id="Pitch"></a>
-Task</h2>
-<p>The pitch task takes the current vertical position and uses the control loop try to aim at the target. If Pitch Task is at the same position of the target for several cycles, then the target is located in the vertical axis and the Pitch Task shares P_OnTarg to high to the Firing Task.</p>
-<h2><a class="anchor" id="Firing"></a>
-Task</h2>
-<p>The firing task takes the data shared by both the Yaw Task and the Pitch Task in the form of the two booleans: Y_OnTarg and P_On_Targ respectively. If both booleans are True then the firing task commands the firing motor to articulate a dart into the rotating flywheels.</p>
-<p>Reference: docs/Firing_FSM.jpg </p>
-</div></div><!-- PageDoc -->
+&#160;<ul>
+<li>_addr&#160;:&#160;<a class="el" href="classmlx__cam_1_1_m_l_x___cam.html#a403e8a733d26d5a0f4f1e97f14766431">mlx_cam.MLX_Cam</a></li>
+<li>_height&#160;:&#160;<a class="el" href="classmlx__cam_1_1_m_l_x___cam.html#a3308470a1edba9a20d047c3f75dcacb9">mlx_cam.MLX_Cam</a></li>
+<li>_i2c&#160;:&#160;<a class="el" href="classmlx__cam_1_1_m_l_x___cam.html#a99be4162b9f2d1005b1ab54fc6e98977">mlx_cam.MLX_Cam</a></li>
+<li>_image&#160;:&#160;<a class="el" href="classmlx__cam_1_1_m_l_x___cam.html#a26bbcb9ea8bb48ee8e622f2b1d17b327">mlx_cam.MLX_Cam</a></li>
+<li>_pattern&#160;:&#160;<a class="el" href="classmlx__cam_1_1_m_l_x___cam.html#a46c9b6e794cd1a9fa96f3b1cbd2b69fe">mlx_cam.MLX_Cam</a></li>
+<li>_width&#160;:&#160;<a class="el" href="classmlx__cam_1_1_m_l_x___cam.html#a1abc3298153b1808855811670b9a428c">mlx_cam.MLX_Cam</a></li>
+<li>asc&#160;:&#160;<a class="el" href="classmlx__cam_1_1_m_l_x___cam.html#ab54cab49d3896537eec5516972c90804">mlx_cam.MLX_Cam</a></li>
+<li>go_flag&#160;:&#160;<a class="el" href="classcotask_1_1_task.html#a96733bb9f4349a3f284083d1d4e64f9f">cotask.Task</a></li>
+<li>name&#160;:&#160;<a class="el" href="classcotask_1_1_task.html#ab54e069dd0b4f0a2f8e7f00c94998a10">cotask.Task</a></li>
+<li>period&#160;:&#160;<a class="el" href="classcotask_1_1_task.html#a44f980f61f1908764c6821fa886590ca">cotask.Task</a></li>
+<li>pri_list&#160;:&#160;<a class="el" href="classcotask_1_1_task_list.html#aac6e53cb4fec80455198ff85c85a4b51">cotask.TaskList</a></li>
+<li>priority&#160;:&#160;<a class="el" href="classcotask_1_1_task.html#aeced93c7b7d23e33de9693d278aef88b">cotask.Task</a></li>
+<li>ser_num&#160;:&#160;<a class="el" href="classtask__share_1_1_queue.html#a6f9d87b116eb16dba0867d3746af9f5f">task_share.Queue</a>, <a class="el" href="classtask__share_1_1_share.html#a2e8df029af46fbfd44ef0c2e7e8c7af6">task_share.Share</a></li>
+</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

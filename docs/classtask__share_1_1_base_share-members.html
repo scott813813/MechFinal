@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Mech 405: Term Project: Mech 405: Term Project</title>
+<title>Mech 405: Term Project: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -55,37 +55,21 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('index.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classtask__share_1_1_base_share.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
-<div><div class="header">
-  <div class="headertitle"><div class="title">Mech 405: Term Project </div></div>
+<div class="header">
+  <div class="headertitle"><div class="title">task_share.BaseShare Member List</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="Software"></a>
-Design</h1>
-<p>The dueling robot uses a set of tasks to run and target an opponent succesfully. The robot uses MicroPython to control two motors and adjust the pitch and yaw axis in order to follow the target found in the provided thermal camera. Update??</p>
-<p>Reference: <img src="docs/Task_Diagram.jpg" alt="My Image" class="inline"/></p>
-<h2><a class="anchor" id="Button"></a>
-Task</h2>
-<p>The button task shares the status of the button to the camera task. When the button is in its 'On' state the flywheels are primed and the camera is turned on. If the button is toggled again, the button is set to 'Off' and the flywheel and camera are both shut off.</p>
-<p>Reference: docs/Button_FSM.jpg</p>
-<h2><a class="anchor" id="Camera"></a>
-Task</h2>
-<p>The camera task queues the location of the target in its field of view with both the Yaw Axis Controller and the Pitch Axis Controller. It utilizes a an algorithm that 'splits' the 32 by 24 pixel grid into an 8 by 24 grid of 'arrays' (effectively splits them as so, but not technically). It then compares the average heat value of each split array to find the maximum and returns its x and y location relative to the center axis of the screen.</p>
-<h2><a class="anchor" id="Yaw"></a>
-Task</h2>
-<p>The yaw task takes the current horizontal position and uses the control loop try to aim at the target. If Yaw Task is at the same position of the target for several cycles, then the target is located in the horizontal axis and the Yaw Task shares Y_OnTarg to high to the Firing Task.</p>
-<h2><a class="anchor" id="Pitch"></a>
-Task</h2>
-<p>The pitch task takes the current vertical position and uses the control loop try to aim at the target. If Pitch Task is at the same position of the target for several cycles, then the target is located in the vertical axis and the Pitch Task shares P_OnTarg to high to the Firing Task.</p>
-<h2><a class="anchor" id="Firing"></a>
-Task</h2>
-<p>The firing task takes the data shared by both the Yaw Task and the Pitch Task in the form of the two booleans: Y_OnTarg and P_On_Targ respectively. If both booleans are True then the firing task commands the firing motor to articulate a dart into the rotating flywheels.</p>
-<p>Reference: docs/Firing_FSM.jpg </p>
-</div></div><!-- PageDoc -->
-</div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="classtask__share_1_1_base_share.html">task_share.BaseShare</a>, including all inherited members.</p>
+<table class="directory">
+  <tr class="even"><td class="entry"><a class="el" href="classtask__share_1_1_base_share.html#aecdc98ad6b42e05f481cf3ffa5f72ad4">__init__</a>(self, type_code, thread_protect=True, name=None)</td><td class="entry"><a class="el" href="classtask__share_1_1_base_share.html">task_share.BaseShare</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>_thread_protect</b> (defined in <a class="el" href="classtask__share_1_1_base_share.html">task_share.BaseShare</a>)</td><td class="entry"><a class="el" href="classtask__share_1_1_base_share.html">task_share.BaseShare</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>_type_code</b> (defined in <a class="el" href="classtask__share_1_1_base_share.html">task_share.BaseShare</a>)</td><td class="entry"><a class="el" href="classtask__share_1_1_base_share.html">task_share.BaseShare</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+</table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
