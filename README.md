@@ -18,7 +18,10 @@ a set of screws and causes rotation of the gun in the pitch direction through th
 use of the other provided Ametek/Pittman motor and a mating gear (laser cut from 
 acrylic) that is directly screwed into and attached to the nerf gun with the use 
 of 2 screws.
-[INSERT IMAGES OF DESIGN HERE]
+![My Image](docs/Turret.jpg) <br>
+![My Image](docs/DeconstructedTurret.jpg) <br>
+Two images of the turret design is attached. One of the fully constructed turret and
+the other of a deconstructed turret showcasing the custom bearing.
 
 ### Software Design
 The dueling robot uses a set of tasks (specified below) called in a main program 
